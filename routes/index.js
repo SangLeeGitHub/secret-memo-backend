@@ -3,12 +3,14 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+  res.locals.connection.end();
 });
 
 router.get('/ids', function(req, res, next) {
   res.locals.connection.query('select * from secretboard', (error, results, fields) => {
     if (error) throw error;
-    res.send(results)
+    res.send(results);
+    res.locals.connection.end();
   });
 });
 
@@ -18,6 +20,7 @@ router.post('/create', (req, res, next) => {
     (error, results, fields) => {
       if (error) throw error;
       res.send(JSON.stringify(results));
+      res.locals.connection.end();
     });
 });
 
@@ -26,6 +29,7 @@ router.get('/delete/:id', (req, res, next) => {
   res.locals.connection.query('delete from secretboard where id=' + req.params.id, (error, results, fields) => {
     if (error) throw error;
     res.send(JSON.stringify(results));
+    res.locals.connection.end();
   });
 });
 
@@ -36,6 +40,7 @@ router.post('/update', (req, res, next) => {
     (error, results, fields) => {
       if (error) throw error;
       res.send(JSON.stringify(results));
+      res.locals.connection.end();
     });
 });
 
